@@ -2,6 +2,7 @@ from matplotlib.pyplot import figure
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.patches as mpatches
+import time
 
 fig = figure(figsize=(12, 9), dpi=80, facecolor='w', edgecolor='k')
 
@@ -42,9 +43,13 @@ for rect, label in zip(rects, improved_accuracy):
 plt.ylabel('Accuracy %')
 plt.title('Accuracy Chart')
 
-plt.xticks(ind + width / 2, ('KNN', 'SVM', 'Logistic Regr.', 'Decision Tree', 'Random Forest', 'Naives Bayes', 'ANN'),
+plt.xticks(ind + width / 2, ('SVM','KNN','Logistic Regression','Naives Bayes', 'Random Forest', 'Decision Tree', 'ANN'),
            rotation=90)
 
 plt.ylim(0, 100)
 
 plt.show()
+time.sleep(2)
+b.get_children()[1].set_color('#cc0000')
+a.get_children()[1].set_alpha(0.3)
+plt.draw_all()

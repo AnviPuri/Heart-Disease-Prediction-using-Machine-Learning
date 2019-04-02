@@ -3,7 +3,6 @@ from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import *
 # import numpy as np
 import pandas as pd
-# import matplotlib.pyplot as plt
 import sklearn
 from sklearn.preprocessing import Imputer
 from sklearn.model_selection import train_test_split
@@ -17,6 +16,64 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
+from matplotlib.pyplot import figure
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.patches as mpatches
+
+
+def show_graph(x):
+    fig = figure(figsize=(12, 9), dpi=80, facecolor='w', edgecolor='k')
+
+    fig.canvas.set_window_title('Accuracy Comparison Chart')
+
+    # Legend
+    red_patch = mpatches.Patch(color='#cc0000', label='Selected Algorithm')
+    orange_patch = mpatches.Patch(color='#FF7F0E', label='Old Algorithm')
+    blue_patch = mpatches.Patch(color='#1F77B4', label='New Algorithm')
+
+    N = 7
+    old_accuracy = (84.71, 84, 85.47, 81.94, 84.81, 77.26, 84.34)
+    improved_accuracy = (85, 84.52, 85.47, 81.94, 84.34, 81.50, 85.19)
+
+    ind = np.arange(N)
+    width = 0.4
+    a = plt.bar(ind, old_accuracy, width, label='Old Accuracy')
+    b = plt.bar(ind + width, improved_accuracy, width, label='Current Accuracy')
+
+    if x != 0:
+        b.get_children()[x - 1].set_color('#cc0000')
+        a.get_children()[x - 1].set_alpha(0.3)
+        plt.legend(handles=[red_patch, orange_patch, blue_patch])
+    else:
+        plt.legend(handles=[orange_patch, blue_patch])
+
+    rects = a.patches
+
+    for rect, label in zip(rects, old_accuracy):
+        height = rect.get_height()
+        plt.text(rect.get_x() + rect.get_width() / 2, height + .5, label,
+                 ha='center', va='bottom', alpha=0.6)
+
+    rects = b.patches
+
+    for rect, label in zip(rects, improved_accuracy):
+        height = rect.get_height()
+        plt.text(rect.get_x() + rect.get_width() / 2, height + .5, label,
+                 ha='center', va='bottom')
+
+    plt.ylabel('Accuracy %')
+    plt.title('Accuracy Chart')
+
+    plt.xticks(ind + width / 2,
+               ('SVM', 'KNN', 'Logistic Regression', 'Naives Bayes', 'Random Forest', 'Decision Tree', 'ANN'),
+               rotation=90)
+
+    plt.ylim(0, 100)
+
+
+    plt.show()
+
 
 sample = {'col0': [1], 'col1': [40], 'col2': [1], 'col3': [4], 'col4': [0], 'col5': [0], 'col6': [1], 'col7': [1],
           'col8': [395], 'col9': [100], 'col10': [70], 'col11': [23], 'col12': [80], 'col13': [70]}
@@ -187,6 +244,9 @@ class Window(QWidget):
         self.bn_submit = QPushButton("Submit")
         self.bn_submit.clicked.connect(self.submit_clicked)
 
+        self.bn_graph = QPushButton("Show Graph..")
+        self.bn_graph.clicked.connect(self.graph_clicked)
+
         # LAYOUTS        
         VBox_main = QVBoxLayout()
         VBox_up = QVBoxLayout()
@@ -240,6 +300,7 @@ class Window(QWidget):
         VBox_left.addWidget(self.algo_ANN)
 
         HBox_button.addWidget(self.bn_check)
+        HBox_button.addWidget(self.bn_graph)
         HBox_button.addWidget(self.bn_submit)
 
         # Setting Layout
@@ -324,6 +385,9 @@ class Window(QWidget):
             QMessageBox.about(self, "ANN Accuracy Check", msg[1])
         else:
             QMessageBox.about(self, "No algotihm selected", "Please select an algorithm")
+
+    def graph_clicked(self):
+        show_graph(self.algo_number)
 
     def submit_clicked(self):
         global sample
