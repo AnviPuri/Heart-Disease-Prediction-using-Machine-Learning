@@ -1,7 +1,6 @@
 import sys
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import *
-# import numpy as np
 import pandas as pd
 import sklearn
 from sklearn.preprocessing import Imputer
@@ -66,7 +65,7 @@ def show_graph(x):
     plt.title('Accuracy Chart')
 
     plt.xticks(ind + width / 2,
-               ('SVM', 'KNN', 'Logistic Regression', 'Naives Bayes', 'Random Forest', 'Decision Tree', 'ANN'),
+               ('SVM', 'KNN', 'Logistic Regr.', 'Naives Bayes', 'Random Forest', 'Decision Tree', 'ANN'),
                rotation=90)
 
     plt.ylim(0, 100)
@@ -111,7 +110,7 @@ class Window(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Heart Disease Prediction")
-        self.setFixedSize(320, 570)
+        self.setFixedSize(320, 580)
         self.setWindowIcon(QtGui.QIcon('Images/heart.png'))
         self.setGeometry(100, 100, 50, 50)
         self.init_ui()
@@ -319,6 +318,9 @@ class Window(QWidget):
     # FUNCTIONS FOR WIDGETS
     algo_number = 0
 
+    def result_to_pdf(self):
+        print('pdf buttons work')
+
     def checkbox_selected(self):
         pass
 
@@ -488,9 +490,11 @@ class Window(QWidget):
 
         # Giving the prediction
 
+
         msg_good = QMessageBox()
         msg_good.setWindowTitle('Prediction Result')
-        msg_good.setInformativeText('You are healthy.')
+        msg_good.setText('You are healthy.')
+        msg_good.setInformativeText('')
         msg_good.setIcon(QMessageBox.Information)
         msg_good.setWindowIcon(QtGui.QIcon('Images/heart_healthy.png'))
 
@@ -501,20 +505,46 @@ class Window(QWidget):
         msg_bad.setDetailedText('visit us at healthtips.info')
         msg_bad.setWindowIcon(QtGui.QIcon('Images/heart-rate-monitor.png'))
 
+        def dialog():
+            msg_pdf = QDialog()
+            lb_pdf_message = QLabel('Do you want to print pdf?')
+            bn_pdf_print = QPushButton('Print')
+            bn_pdf_print.clicked.connect(self.result_to_pdf)
+            bn_pdf_cancel = QPushButton('Cancel')
+            bn_pdf_cancel.click.connect(self.result_to_pdf)
+            layout_pdf_print = QGridLayout()
+            layout_pdf_print.addWidget(lb_pdf_message, 0, 0)
+            layout_pdf_print.addWidget(bn_pdf_print, 1, 0)
+            layout_pdf_print.addWidget(bn_pdf_cancel, 1, 1)
+            msg_pdf.setLayout(layout_pdf_print)
+            msg_pdf.show()
+
+        # msg_pdf.setIcon(QMessageBox.Question)
+        # msg_pdf.setText("Do you want to print the results to PDF?")
+        # msg_pdf.setInformativeText(" ")
+        # msg_pdf.setWindowTitle("Prediction Results")
+        # msg_pdf.setEscapeButton('escape')
+        # msg_pdf.buttonClicked.connect(self.result_to_pdf())
+
         if self.algo_number == 1:
             prediction = support_vector_machine_algorithm()
             if prediction[0] == 0:
                 print('alive')
+
                 msg_good.exec_()
+                dialog()
+
             elif prediction[0] == 1:
                 print('ded')
                 msg_bad.exec_()
+
 
         if self.algo_number == 2:
             prediction = knn_algorithm()
             if prediction[0] == 0:
                 print('alive')
                 msg_good.exec_()
+
             elif prediction[0] == 1:
                 print('ded')
                 msg_bad.exec_()
@@ -523,8 +553,8 @@ class Window(QWidget):
             prediction = logistic_regression_algorithm()
             if prediction[0] == 0:
                 print('alive')
-
                 msg_good.exec_()
+
             elif prediction[0] == 1:
                 print('ded')
                 msg_bad.exec_()
@@ -534,36 +564,44 @@ class Window(QWidget):
             if prediction[0] == 0:
                 print('alive')
                 msg_good.exec_()
+
             elif prediction[0] == 1:
                 print('ded')
                 msg_bad.exec_()
+
 
         if self.algo_number == 5:
             prediction = random_forest_algorithm()
             if prediction[0] == 0:
                 print('alive')
                 msg_good.exec_()
+
             elif prediction[0] == 1:
                 print('ded')
                 msg_bad.exec_()
+
 
         if self.algo_number == 6:
             prediction = decision_tree_algorithm()
             if prediction[0] == 0:
                 print('alive')
                 msg_good.exec_()
+
             elif prediction[0] == 1:
                 print('ded')
                 msg_bad.exec_()
+
 
         if self.algo_number == 7:
             prediction = ann_algorithm()
             if prediction[0] == 0:
                 print('alive')
                 msg_good.exec_()
+
             elif prediction[0] == 1:
                 print('ded')
                 msg_bad.exec_()
+
 
 
 def ann_algorithm():
