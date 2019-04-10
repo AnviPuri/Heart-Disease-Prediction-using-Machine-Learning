@@ -70,7 +70,6 @@ def show_graph(x):
 
     plt.ylim(0, 100)
 
-
     plt.show()
 
 
@@ -104,13 +103,16 @@ sc_X = StandardScaler()
 X_train = sc_X.fit_transform(X_train)
 X_test = sc_X.transform(X_test)
 
+window_width = 320
+window_height = 580
+
 
 class Window(QWidget):
 
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Heart Disease Prediction")
-        self.setFixedSize(320, 580)
+        self.setFixedSize(window_width, window_height)
         self.setWindowIcon(QtGui.QIcon('Images/heart.png'))
         self.setGeometry(100, 100, 50, 50)
         self.init_ui()
@@ -391,6 +393,9 @@ class Window(QWidget):
     def graph_clicked(self):
         show_graph(self.algo_number)
 
+    def pdf_btn(self, i):
+        print("Button pressed", i.text())
+
     def submit_clicked(self):
         global sample
 
@@ -490,127 +495,109 @@ class Window(QWidget):
 
         # Giving the prediction
 
+        def healthy_msg():
+            msg_good = QMessageBox()
+            msg_good.setWindowTitle('Prediction Result')
+            msg_good.setText('You are healthy.')
+            msg_good.setInformativeText('Print results to pdf?')
+            msg_good.setIcon(QMessageBox.Information)
+            msg_good.setWindowIcon(QtGui.QIcon('Images/heart_healthy.png'))
+            msg_good.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            msg_good.buttonClicked.connect(self.pdf_btn)
+            msg_good.exec_()
 
-        msg_good = QMessageBox()
-        msg_good.setWindowTitle('Prediction Result')
-        msg_good.setText('You are healthy.')
-        msg_good.setInformativeText('')
-        msg_good.setIcon(QMessageBox.Information)
-        msg_good.setWindowIcon(QtGui.QIcon('Images/heart_healthy.png'))
-
-        msg_bad = QMessageBox()
-        msg_bad.setWindowTitle('Prediction Result')
-        msg_bad.setInformativeText('You \'re at risk.')
-        msg_bad.setIcon(QMessageBox.Critical)
-        msg_bad.setDetailedText('visit us at healthtips.info')
-        msg_bad.setWindowIcon(QtGui.QIcon('Images/heart-rate-monitor.png'))
-
-        def dialog():
-            msg_pdf = QDialog()
-            lb_pdf_message = QLabel('Do you want to print pdf?')
-            bn_pdf_print = QPushButton('Print')
-            bn_pdf_print.clicked.connect(self.result_to_pdf)
-            bn_pdf_cancel = QPushButton('Cancel')
-            bn_pdf_cancel.click.connect(self.result_to_pdf)
-            layout_pdf_print = QGridLayout()
-            layout_pdf_print.addWidget(lb_pdf_message, 0, 0)
-            layout_pdf_print.addWidget(bn_pdf_print, 1, 0)
-            layout_pdf_print.addWidget(bn_pdf_cancel, 1, 1)
-            msg_pdf.setLayout(layout_pdf_print)
-            msg_pdf.show()
-
-        # msg_pdf.setIcon(QMessageBox.Question)
-        # msg_pdf.setText("Do you want to print the results to PDF?")
-        # msg_pdf.setInformativeText(" ")
-        # msg_pdf.setWindowTitle("Prediction Results")
-        # msg_pdf.setEscapeButton('escape')
-        # msg_pdf.buttonClicked.connect(self.result_to_pdf())
+        def risk_msg():
+            msg_bad = QMessageBox()
+            msg_bad.setWindowTitle('Prediction Result')
+            msg_bad.setInformativeText('You \'re at risk.')
+            msg_bad.setIcon(QMessageBox.Critical)
+            msg_bad.setDetailedText('visit us at healthtips.info')
+            msg_bad.setWindowIcon(QtGui.QIcon('Images/heart-rate-monitor.png'))
+            msg_bad.exec_()
 
         if self.algo_number == 1:
             prediction = support_vector_machine_algorithm()
             if prediction[0] == 0:
                 print('alive')
+                healthy_msg()
+                # msg_good.exec_()
 
-                msg_good.exec_()
-                dialog()
 
             elif prediction[0] == 1:
                 print('ded')
-                msg_bad.exec_()
-
+                risk_msg()
 
         if self.algo_number == 2:
             prediction = knn_algorithm()
             if prediction[0] == 0:
                 print('alive')
-                msg_good.exec_()
+                healthy_msg()
 
             elif prediction[0] == 1:
                 print('ded')
-                msg_bad.exec_()
+                risk_msg()
 
         if self.algo_number == 3:
             prediction = logistic_regression_algorithm()
             if prediction[0] == 0:
                 print('alive')
-                msg_good.exec_()
+                healthy_msg()
 
             elif prediction[0] == 1:
                 print('ded')
-                msg_bad.exec_()
+                risk_msg()
 
         if self.algo_number == 4:
             prediction = naive_bayes_algorithm()
             if prediction[0] == 0:
                 print('alive')
-                msg_good.exec_()
+                healthy_msg()
 
             elif prediction[0] == 1:
                 print('ded')
-                msg_bad.exec_()
-
+                risk_msg()
 
         if self.algo_number == 5:
             prediction = random_forest_algorithm()
             if prediction[0] == 0:
                 print('alive')
-                msg_good.exec_()
+                healthy_msg()
 
             elif prediction[0] == 1:
                 print('ded')
-                msg_bad.exec_()
-
+                risk_msg()
 
         if self.algo_number == 6:
             prediction = decision_tree_algorithm()
             if prediction[0] == 0:
                 print('alive')
-                msg_good.exec_()
+                healthy_msg()
 
             elif prediction[0] == 1:
                 print('ded')
-                msg_bad.exec_()
-
+                risk_msg()
 
         if self.algo_number == 7:
             prediction = ann_algorithm()
             if prediction[0] == 0:
                 print('alive')
-                msg_good.exec_()
+                healthy_msg()
 
             elif prediction[0] == 1:
                 print('ded')
-                msg_bad.exec_()
-
+                risk_msg()
 
 
 def ann_algorithm():
     msg_wait = QMessageBox()
     msg_wait.setWindowTitle('Patience')
-    msg_wait.setInformativeText('\t \t')
+    msg_wait.setInformativeText('Press OK to continue')
+    msg_wait.setText('This algorithm takes longer than usual.')
     msg_wait.setWindowIcon(QtGui.QIcon('Images/meditation.png'))
+    msg_wait.setGeometry(100+(window_width//9), 100+(window_height//2), 50, 50)
+    # msg_wait.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
     # msg_wait.setDetailedText("This option takes longer than usual")
-    msg_wait.show()
+    msg_wait.exec_()
 
     # Importing the Keras libraries and packages
 
@@ -648,7 +635,7 @@ def ann_algorithm():
     y = ("{0:.2f}".format(sklearn.metrics.accuracy_score(y_test, y_pred) * 100))
     b = 'Accuracy: ' + str(y) + "%"
 
-    msg_wait.close()
+    # msg_wait.close()
 
     # Accuracy and Prediction
     return [a, b]
