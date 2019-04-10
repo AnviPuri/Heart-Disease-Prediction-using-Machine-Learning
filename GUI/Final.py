@@ -198,7 +198,7 @@ class Window(QWidget):
 
         # Body Mass Index
         self.wd_BMI = QLineEdit()
-        self.wd_BMI.setMaxLength(3)
+        self.wd_BMI.setMaxLength(2)
         self.wd_BMI.setPlaceholderText('Enter Body Mass Index')
 
         # Heart Rate
@@ -321,6 +321,7 @@ class Window(QWidget):
 
     # FUNCTIONS FOR WIDGETS
     algo_number = 0
+    print_prediction = -1
 
     def result_to_pdf(self):
         print('pdf buttons work')
@@ -398,16 +399,61 @@ class Window(QWidget):
     def pdf_btn(self, i):
         print("Button pressed", i.text())
         if i.text() == "OK":
-
-            file_name = str(int(time.time())) + "_Result.pdf"
-            # print(file_name)
+            file_name = "e:/results/" + str(int(time.time())) + "_Result.pdf"
             pdf = fpdf.FPDF()
             pdf.add_page()
-            pdf.set_font("Arial", "B", 14)
+
             # Add lines to PDF here
-            pdf.cell(0, 5, ('Name: '+ self.wd_name.text()), 0, 1)
-            pdf.cell(0, 5, ('Gender: '+ self.wd_gender.currentText()), 0, 1)
-            # pdf.cell(0, 5, (': '+), 0, 1)
+            pdf.set_font("Arial", "B", 20)
+            pdf.cell(0, 5, "Patient Record", 0, 1)
+            pdf.cell(0, 5, "\t \t", 0, 1)
+
+            pdf.set_font("Arial", "B", 14)
+            pdf.cell(0, 5, ('Name: ' + self.wd_name.text()), 0, 1)
+            pdf.cell(0, 5, ('Gender: ' + self.wd_gender.currentText()), 0, 1)
+            pdf.cell(0, 5, ('Age: ' + self.wd_age.text()), 0, 1)
+            pdf.cell(0, 5, '\t\t', 0, 1)
+
+            if self.wd_current_smoker.isChecked():
+                pdf.cell(0, 5, 'Current Smoker: Yes', 0, 1)
+                pdf.cell(0, 5, ('Cigrattes per day: ' + self.wd_cigs_per_day.text()), 0, 1)
+            else:
+                pdf.cell(0, 5, 'Current Smoker: No', 0, 1)
+                pdf.cell(0, 5, 'Cigrattes per day: N/A', 0, 1)
+
+            if self.wd_BP_meds.isChecked():
+                pdf.cell(0, 5, 'BP Medication: Yes', 0, 1)
+            else:
+                pdf.cell(0, 5, 'BP Medication: No', 0, 1)
+
+            if self.wd_prevalent_hyp.isChecked():
+                pdf.cell(0, 5, 'Prevalent Hypertension: Yes', 0, 1)
+            else:
+                pdf.cell(0, 5, 'Prevalent Hypertension: No', 0, 1)
+
+            if self.wd_prevalent_stroke.isChecked():
+                pdf.cell(0, 5, 'Prevalent Stroke: Yes', 0, 1)
+            else:
+                pdf.cell(0, 5, 'Prevalent Stroke: No', 0, 1)
+
+            if self.wd_diabetic.isChecked():
+                pdf.cell(0, 5, 'Diabetic: Yes', 0, 1)
+            else:
+                pdf.cell(0, 5, 'Diabetic: No', 0, 1)
+
+            pdf.cell(0, 5, ('\t\t'), 0, 1)
+            pdf.cell(0, 5, ('Cholesterol: ' + self.wd_cholesterol.text()), 0, 1)
+            pdf.cell(0, 5, ('Systolic BP: ' + self.wd_sysBP.text()), 0, 1)
+            pdf.cell(0, 5, ('Diastolic BP: ' + self.wd_diaBP.text()), 0, 1)
+            pdf.cell(0, 5, ('BMI: ' + self.wd_BMI.text()), 0, 1)
+            pdf.cell(0, 5, ('Heart Rate: ' + self.wd_heart_rate.text()), 0, 1)
+            pdf.cell(0, 5, ('Glucose: ' + self.wd_glucose.text()), 0, 1)
+            pdf.cell(0, 5, ('\t\t'), 0, 1)
+
+            if self.print_prediction == 0:
+                pdf.cell(0, 5, '10 year CHD Prediction: Low Risk', 0, 1)
+            elif self.print_prediction == 1:
+                pdf.cell(0, 5, '10 year CHD Prediction: High Risk', 0, 1)
 
             pdf.output(file_name, 'F')
 
@@ -517,6 +563,7 @@ class Window(QWidget):
             msg_good.setInformativeText('Print results to pdf?')
             msg_good.setIcon(QMessageBox.Information)
             msg_good.setWindowIcon(QtGui.QIcon('Images/heart_healthy.png'))
+            msg_good.setGeometry(100 + (window_width // 9), 100 + (window_height // 2), 50, 50)
             msg_good.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
             msg_good.buttonClicked.connect(self.pdf_btn)
             msg_good.exec_()
@@ -524,81 +571,95 @@ class Window(QWidget):
         def risk_msg():
             msg_bad = QMessageBox()
             msg_bad.setWindowTitle('Prediction Result')
-            msg_bad.setInformativeText('You \'re at risk.')
             msg_bad.setIcon(QMessageBox.Critical)
-            msg_bad.setDetailedText('visit us at healthtips.info')
+            msg_bad.setText('You are risk.')
+            msg_bad.setInformativeText('Print results to pdf?')
             msg_bad.setWindowIcon(QtGui.QIcon('Images/heart-rate-monitor.png'))
+            msg_bad.setGeometry(100 + (window_width // 9), 100 + (window_height // 2), 50, 50)
+            msg_bad.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            msg_bad.buttonClicked.connect(self.pdf_btn)
             msg_bad.exec_()
 
         if self.algo_number == 1:
             prediction = support_vector_machine_algorithm()
             if prediction[0] == 0:
+                self.print_prediction = 0
                 print('alive')
                 healthy_msg()
-                # msg_good.exec_()
-
-
             elif prediction[0] == 1:
+                self.print_prediction = 1
                 print('ded')
                 risk_msg()
 
         if self.algo_number == 2:
             prediction = knn_algorithm()
             if prediction[0] == 0:
+                self.print_prediction = 0
                 print('alive')
                 healthy_msg()
 
             elif prediction[0] == 1:
+                self.print_prediction = 1
                 print('ded')
                 risk_msg()
 
         if self.algo_number == 3:
             prediction = logistic_regression_algorithm()
             if prediction[0] == 0:
+                self.print_prediction = 0
                 print('alive')
                 healthy_msg()
 
             elif prediction[0] == 1:
+                self.print_prediction = 1
                 print('ded')
                 risk_msg()
 
         if self.algo_number == 4:
             prediction = naive_bayes_algorithm()
             if prediction[0] == 0:
+                self.print_prediction = 0
                 print('alive')
                 healthy_msg()
 
             elif prediction[0] == 1:
+                self.print_prediction = 1
                 print('ded')
                 risk_msg()
 
         if self.algo_number == 5:
             prediction = random_forest_algorithm()
             if prediction[0] == 0:
+                self.print_prediction = 0
                 print('alive')
                 healthy_msg()
 
             elif prediction[0] == 1:
+                self.print_prediction = 1
                 print('ded')
                 risk_msg()
 
         if self.algo_number == 6:
             prediction = decision_tree_algorithm()
             if prediction[0] == 0:
+                self.print_prediction = 0
                 print('alive')
                 healthy_msg()
 
             elif prediction[0] == 1:
+                self.print_prediction = 1
                 print('ded')
                 risk_msg()
 
         if self.algo_number == 7:
             prediction = ann_algorithm()
             if prediction[0] == 0:
+                self.print_prediction = 0
                 print('alive')
                 healthy_msg()
 
             elif prediction[0] == 1:
+                self.print_prediction = 1
                 print('ded')
                 risk_msg()
 
@@ -609,9 +670,7 @@ def ann_algorithm():
     msg_wait.setInformativeText('Press OK to continue')
     msg_wait.setText('This algorithm takes longer than usual.')
     msg_wait.setWindowIcon(QtGui.QIcon('Images/meditation.png'))
-    msg_wait.setGeometry(100+(window_width//9), 100+(window_height//2), 50, 50)
-    # msg_wait.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-    # msg_wait.setDetailedText("This option takes longer than usual")
+    msg_wait.setGeometry(100 + (window_width // 9), 100 + (window_height // 2), 50, 50)
     msg_wait.exec_()
 
     # Importing the Keras libraries and packages
