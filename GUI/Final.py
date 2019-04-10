@@ -1,4 +1,6 @@
 import sys
+import fpdf
+import time
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import *
 import pandas as pd
@@ -395,6 +397,19 @@ class Window(QWidget):
 
     def pdf_btn(self, i):
         print("Button pressed", i.text())
+        if i.text() == "OK":
+
+            file_name = str(int(time.time())) + "_Result.pdf"
+            # print(file_name)
+            pdf = fpdf.FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", "B", 14)
+            # Add lines to PDF here
+            pdf.cell(0, 5, ('Name: '+ self.wd_name.text()), 0, 1)
+            pdf.cell(0, 5, ('Gender: '+ self.wd_gender.currentText()), 0, 1)
+            # pdf.cell(0, 5, (': '+), 0, 1)
+
+            pdf.output(file_name, 'F')
 
     def submit_clicked(self):
         global sample
