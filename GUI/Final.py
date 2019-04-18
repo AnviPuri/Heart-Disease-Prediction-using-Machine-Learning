@@ -30,8 +30,8 @@ def show_graph(x):
 
     # Legend
     red_patch = mpatches.Patch(color='#cc0000', label='Selected Algorithm')
-    orange_patch = mpatches.Patch(color='#FF7F0E', label='Old Algorithm')
-    blue_patch = mpatches.Patch(color='#1F77B4', label='New Algorithm')
+    orange_patch = mpatches.Patch(color='#FF7F0E', label='New Algorithm')
+    blue_patch = mpatches.Patch(color='#1F77B4', label='Old Algorithm')
 
     N = 7
     old_accuracy = (84.71, 84, 85.47, 81.94, 84.81, 77.26, 84.34)
@@ -409,6 +409,7 @@ class Window(QWidget):
             pdf.cell(0, 5, "\t \t", 0, 1)
 
             pdf.set_font("Arial", "B", 14)
+
             pdf.cell(0, 5, ('Name: ' + self.wd_name.text()), 0, 1)
             pdf.cell(0, 5, ('Gender: ' + self.wd_gender.currentText()), 0, 1)
             pdf.cell(0, 5, ('Age: ' + self.wd_age.text()), 0, 1)
@@ -464,6 +465,11 @@ class Window(QWidget):
         msgBox.setIcon(QMessageBox.Information)
 
         # Adding data to the dict: 'sample'
+
+        if self.wd_name.text() == '':
+            msgBox.setWindowTitle("Name not entered!")
+            msgBox.setInformativeText("Please enter patient name!")
+            msgBox.exec_()
 
         if self.gender_selected() is None:
             msgBox.setWindowTitle("Gender not selected!")
