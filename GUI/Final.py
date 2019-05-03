@@ -405,11 +405,11 @@ class Window(QWidget):
 
             # Add lines to PDF here
             pdf.set_font("Arial", "B", 20)
+            pdf.image("Images/report_logo.png")
+            pdf.cell(0, 5, "\t \t", 0, 1)
             pdf.cell(0, 5, "Patient Record", 0, 1)
             pdf.cell(0, 5, "\t \t", 0, 1)
-
             pdf.set_font("Arial", "B", 14)
-
             pdf.cell(0, 5, ('Name: ' + self.wd_name.text()), 0, 1)
             pdf.cell(0, 5, ('Gender: ' + self.wd_gender.currentText()), 0, 1)
             pdf.cell(0, 5, ('Age: ' + self.wd_age.text()), 0, 1)
