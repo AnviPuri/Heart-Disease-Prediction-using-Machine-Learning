@@ -14,8 +14,8 @@
       <file leaf-file-name="Final.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Final.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="145">
-              <caret line="408" column="41" selection-start-line="408" selection-start-column="41" selection-end-line="408" selection-end-column="41" />
+            <state relative-caret-position="17">
+              <caret line="410" column="41" selection-start-line="410" selection-start-column="41" selection-end-line="410" selection-end-column="41" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
                 <element signature="e#781#2459#0" />
@@ -78,7 +78,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="156" />
     <option name="y" value="-20" />
     <option name="width" value="784" />
@@ -186,17 +186,16 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="22" width="1936" height="1066" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="22" width="1936" height="1066" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.190625" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.07604167" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" id="R Packages" order="3" />
       <window_info anchor="right" id="R Graphics" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32912722" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32912722" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -809,8 +808,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Final.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="145">
-          <caret line="408" column="41" selection-start-line="408" selection-start-column="41" selection-end-line="408" selection-end-column="41" />
+        <state relative-caret-position="17">
+          <caret line="410" column="41" selection-start-line="410" selection-start-column="41" selection-end-line="410" selection-end-column="41" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
             <element signature="e#781#2459#0" />
