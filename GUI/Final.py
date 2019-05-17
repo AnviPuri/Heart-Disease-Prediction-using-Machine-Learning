@@ -30,12 +30,12 @@ def show_graph(x):
 
     # Legend
     red_patch = mpatches.Patch(color='#cc0000', label='Selected Algorithm')
-    orange_patch = mpatches.Patch(color='#FF7F0E', label='New Algorithm')
-    blue_patch = mpatches.Patch(color='#1F77B4', label='Old Algorithm')
+    orange_patch = mpatches.Patch(color='#FF7F0E', label='Initial Accuracy')
+    blue_patch = mpatches.Patch(color='#1F77B4', label='Final Accuracy')
 
     N = 7
-    old_accuracy = (84.71, 84, 85.47, 81.94, 84.81, 77.26, 84.34)
-    improved_accuracy = (85, 84.52, 85.47, 81.94, 84.34, 81.50, 85.19)
+    old_accuracy = (84.71, 84, 85.47, 81.94, 84.81, 77.26, 85.09)
+    improved_accuracy = (85, 84.52, 85.47, 81.94, 84.34, 81.50, 85.09)
 
     ind = np.arange(N)
     width = 0.4
@@ -340,6 +340,7 @@ class Window(QWidget):
             return None
 
     def radiobtn_selected(self):
+        print(self.algo_number, "pressed")
         if self.algo_SVM.isChecked():
             self.algo_number = 1
 
